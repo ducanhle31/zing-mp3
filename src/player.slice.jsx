@@ -162,15 +162,12 @@ const musicPlayerSlice = createSlice({
       }
     },
     changeLoop(state, action) {
-      switch (state.loop) {
-        case "no":
-          state.loop = "one";
-          break;
-        case "one":
-          state.loop = "all";
-          break;
-        default:
-          state.loop = "no";
+       if (state.loop === "no") {
+        state.loop = "all";
+      } else if (state.loop === "all") {
+        state.loop = "one";
+      } else {
+        state.loop = "no";
       }
     },
     setShuffle(state, action) {
