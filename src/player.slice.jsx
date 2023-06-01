@@ -6,7 +6,7 @@ const randomNumber = (one, arr) => {
   while (x === y) {
     x = Math.ceil(Math.random() * arr.length);
   }
-  console.log(x);
+
   return x;
 };
 const musicPlayerSlice = createSlice({
@@ -86,7 +86,7 @@ const musicPlayerSlice = createSlice({
     loop: "no",
     shuffle: false,
     currentTime: 0,
-    durationTime: "00:00",
+    durationTime: "0",
     openMusicList: false,
   },
   reducers: {

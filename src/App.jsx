@@ -34,13 +34,13 @@ function App() {
     audioRef.current.preload = "metadata";
     audioRef.current.pause();
     audioRef.current.src = currentSong.src;
-    isPlaying ? audioRef.current.play() : "";
+  if (isPlaying)  {audioRef.current.play() } ;
     audioRef.current.volume = volume;
     audioRef.current.ontimeupdate = () => {
       setDuration(audioRef.current.duration);
       setCurrentTime(audioRef.current.currentTime);
     };
-  }, [currentSong]);
+  }, [currentSong], volume, isPlaying,setDuration,);
 
   useEffect(() => {
     setCurrentTime(audioRef.current.currentTime);
