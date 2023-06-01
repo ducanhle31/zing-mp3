@@ -281,9 +281,8 @@ input.music-volume-duration::-webkit-slider-thumb {
 .music-content {
   display: flex;
   position: relative;
-}
-.music-list {
-  width: 70%;
+}.music-list {
+  width: 60%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -308,7 +307,7 @@ input.music-volume-duration::-webkit-slider-thumb {
 .music-now {
   
   padding: 0 5px;
-  width: 30%;
+  width: 40%;
   height: auto;
   display: flex;
   flex-direction: column;
