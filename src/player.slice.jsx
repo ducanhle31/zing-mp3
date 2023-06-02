@@ -6,13 +6,12 @@ const randomNumber = (one, arr) => {
   while (x === y) {
     x = Math.ceil(Math.random() * arr.length);
   }
-
   return x;
 };
-const musicPlayerSlice = createSlice({
-  name: "musicplayer",
+const playerSlice = createSlice({
+  name: "player",
   initialState: {
-    songs: [
+   songs: [
       {
         id: 1,
         title: "Là Anh",
@@ -82,12 +81,9 @@ const musicPlayerSlice = createSlice({
     ],
     current: 1,
     isPlaying: false,
-    volume: 1,
+    volume: 100,
     loop: "no",
     shuffle: false,
-    currentTime: 0,
-    durationTime: "0",
-    openMusicList: false,
   },
   reducers: {
     play(state, action) {
@@ -97,72 +93,73 @@ const musicPlayerSlice = createSlice({
       state.isPlaying = false;
     },
     next(state, action) {
-      if (state.shuffle) {
+          if (state.shuffle) {
         state.current = randomNumber(state.current, state.songs);
         state.isPlaying = true;
-      } else
-        switch (state.loop) {
-          case "no":
-            if (state.current < state.songs.length) {
-              state.current++;
-            } else {
-              state.current = 1;
-            }
+      } else 
+  switch (state.loop) {
+        case "no":
+          if (state.current < state.songs.length) {
+            state.current++;
             state.isPlaying = true;
-            break;
-          case "one":
-            if (state.current < state.songs.length) {
-              state.current++;
-            } else {
-              state.current = 1;
-            }
-            state.loop = "all";
-            state.isPlaying = true;
-            break;
-          default:
-            if (state.current < state.songs.length) {
-              state.current++;
-            } else {
-              state.current = 1;
-            }
-            state.isPlaying = true;
-        }
+          }
+          break;
+
+        case "all":
+          if (state.current < state.songs.length) {
+            state.current++;
+          } else {
+            state.current = 1;
+          }
+
+          state.isPlaying = true;
+          break;
+
+        case "one":
+          break;
+
+        default:
+          return state;
+      }
+      
+    
     },
     prev(state, action) {
-      if (state.shuffle) {
+        if (state.shuffle) {
         state.current = randomNumber(state.current, state.songs);
         state.isPlaying = true;
-      } else {
-        switch (state.loop) {
-          case "no":
-            if (state.current > 1) {
-              state.current--;
-              state.isPlaying = true;
-            } else {
-              state.current = state.songs.length;
-            }
-            break;
-          case "one":
-            if (state.current > 1) {
-              state.current--;
-            } else {
-              state.current = state.songs.length;
-            }
-            state.loop = "all";
+      } else { 
+         switch (state.loop) {
+        case "no":
+          if (state.current > 1) {
+            state.current--;
             state.isPlaying = true;
-            break;
-          default:
-            if (state.current > 1) {
-              state.current--;
-            } else {
-              state.current = state.songs.length;
-            }
-            state.isPlaying = true;
-        }
-      }
+          }
+          break;
+
+        case "all":
+          if (state.current > 1) {
+            state.current--;
+          } else {
+            state.current = state.songs.length;
+          }
+
+          state.isPlaying = true;
+          break;
+
+        case "one":
+          break;
+
+        default:
+          return state;
+      }}
+    
     },
-    changeLoop(state, action) {
-       if (state.loop === "no") {
+    setShuffle(state, action) {
+      state.shuffle = !state.shuffle;
+    },
+    loop(state, action) {
+      if (state.loop === "no") {
         state.loop = "all";
       } else if (state.loop === "all") {
         state.loop = "one";
@@ -170,81 +167,42 @@ const musicPlayerSlice = createSlice({
         state.loop = "no";
       }
     },
-    setShuffle(state, action) {
-      state.shuffle = !state.shuffle;
-    },
     setCurrent(state, action) {
       state.current = action.payload.id;
     },
-    setIsPlaying(state, action) {
-      state.isPlaying = action.payload.value;
-    },
-    setCurrentTime(state, action) {
-      state.currentTime = action.payload.value;
-    },
-    setDuration(state, action) {
-      state.durationTime = action.payload.value;
-    },
-    setVolume(state, action) {
-      state.volume = action.payload.value;
-    },
-    setOpenMusicList(state, action) {
-      state.openMusicList = action.payload.value;
-    },
-  },
+  }
 });
 
-const musicPlayerReducer = musicPlayerSlice.reducer;
-export default musicPlayerReducer;
-export const musicPlayerActions = musicPlayerSlice.actions;
+const playerReducer = playerSlice.reducer;
+const playerActions = playerSlice.actions;
 
-export const useMusicPlayer = () => { 
-   const dispatch = useDispatch();
-   const playerState = useSelector((state) => state.musicplayer);
-  
+export const usePlayer = () => {
+  const dispatch = useDispatch();
+  const playerState = useSelector((state) => state.player);
 
   return {
     ...playerState,
-  currentSong : playerState.songs.find((song) => {
-    if (song.id === playerState.current) {
-      return song.src;
-    }
-  }),
+    current: playerState.songs.find((song) => song.id === playerState.current),
     play() {
-      dispatch(musicPlayerActions.play());
+      dispatch(playerActions.play());
     },
     pause() {
-      dispatch(musicPlayerActions.pause());
+      dispatch(playerActions.pause());
     },
     next() {
-      dispatch(musicPlayerActions.next());
+      dispatch(playerActions.next());
     },
     prev() {
-      dispatch(musicPlayerActions.prev());
+      dispatch(playerActions.prev());
     },
     changeLoop() {
-      dispatch(musicPlayerActions.changeLoop());
+      dispatch(playerActions.loop());
     },
-    setCurrent(id) {
-      dispatch(musicPlayerActions.setCurrent({ id }));
-    },
-    setIsPlaying(value) {
-      dispatch(musicPlayerActions.setIsPlaying({ value }));
-    },
-    setCurrentTime(value) {
-      dispatch(musicPlayerActions.setCurrentTime({ value }));
-    },
-    setDuration(value) {
-      dispatch(musicPlayerActions.setDuration({ value }));
-    },
-    setVolume(value) {
-      dispatch(musicPlayerActions.setVolume({ value }));
-    },
-    setShuffle() {
-      dispatch(musicPlayerActions.setShuffle());
-    },
-    setOpenMusicList(value) {
-      dispatch(musicPlayerActions.setOpenMusicList({ value }));
-    },
+    setShuffle(){dispatch(playerActions.setShuffle)},
+        setCurrent(id) {
+      dispatch(playerActions.setCurrent({ id }));
+    }, 
   };
 };
+
+export default playerReducer;
