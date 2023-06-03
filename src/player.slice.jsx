@@ -83,7 +83,7 @@ const playerSlice = createSlice({
     isPlaying: false,
     volume: 100,
     loop: "no",
-    shuffle: false,
+    shuffle: false,  openMusicList: false
   },
   reducers: {
     play(state, action) {
@@ -169,7 +169,9 @@ const playerSlice = createSlice({
     },
     setCurrent(state, action) {
       state.current = action.payload.id;
-    },
+    },    setOpenMusicList(state, action) {
+      state.openMusicList = action.payload.value;
+    }
   }
 });
 
@@ -199,9 +201,11 @@ export const usePlayer = () => {
       dispatch(playerActions.loop());
     },
     setShuffle(){dispatch(playerActions.setShuffle)},
-        setCurrent(id) {
-      dispatch(playerActions.setCurrent({ id }));
-    }, 
+    setCurrent(id) {dispatch(playerActions.setCurrent({ id }));
+    },
+     setOpenMusicList(value) {
+      dispatch(playerActions.setOpenMusicList({ value }));
+    },
   };
 };
 
